@@ -1,19 +1,18 @@
-from datetime import datetime
-
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, make_response, jsonify
 from flask_login import LoginManager, login_user
 
 from data import db_session
-from data.db_session import global_init, create_session
 from data.jobs import Jobs
 import secrets
 
+from data.jobs_api import blueprint
 from data.users import User
 from forms.login_form import LoginForm
 from forms.register_form import RegisterForm
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = secrets.token_urlsafe(32)
+app.register_blueprint(blueprint)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -73,6 +72,16 @@ def index():
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs)
     return render_template("index.html", jobs=jobs)
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 
 if __name__ == '__main__':
