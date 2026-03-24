@@ -67,6 +67,15 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+@app.route('/list_prof/<list>', methods=["GET"])
+def list_prof(list: str):
+    if not list  in ['ol', 'ul']:
+        return jsonify({"error": "invalid list format"})
+    db_sess = db_session.create_session()
+    users = db_sess.query(User)
+    return render_template("list_prof.html", list=list, users=users)
+
+
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
