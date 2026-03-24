@@ -1,3 +1,4 @@
+import datetime
 from flask import Blueprint, make_response, jsonify, request
 from . import db_session
 from .jobs import Jobs
@@ -5,7 +6,7 @@ from .jobs import Jobs
 blueprint = Blueprint('jobs_api', __name__)
 
 @blueprint.route('/api/jobs', methods=['GET'])
-def get_all_news():
+def get_all_jobs():
     db_sess = db_session.create_session()
     jobs = [n.to_dict(only=("id", "team_leader", "job", "work_size",
                             "collaborators", "start_date", "end_date", "is_finished")) for n in db_sess.query(Jobs).all()]
@@ -13,7 +14,7 @@ def get_all_news():
 
 
 @blueprint.route('/api/jobs/<int:job_id>', methods=['GET'])
-def get_one_news(job_id):
+def get_one_job(job_id):
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs).filter(Jobs.id == job_id).first()
     if not jobs:
@@ -23,7 +24,7 @@ def get_one_news(job_id):
 
 
 @blueprint.route('/api/jobs', methods=['POST'])
-def create_news():
+def create_job():
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
     elif not all(key in request.json for key in
@@ -36,10 +37,21 @@ def create_news():
         job=request.json['job'],
         work_size=request.json['work_size'],
         collaborators=request.json['collaborators'],
-        start_date=request.json['start_date'],
-        end_date=request.json['end_date'],
+        start_date=datetime.datetime.fromisoformat(request.json['start_date']),
+        end_date=datetime.datetime.fromisoformat(request.json['end_date']),
         is_finished=request.json['is_finished']
     )
     db_sess.add(job)
+    db_sess.commit()
+    return jsonify({'id': job.id})
+
+
+@blueprint.route("/api/jobs/<int:job_id>", methods=["DELETE"])
+def delete_job(job_id):
+    db_sess = db_session.create_session()
+    job = db_sess.get(Jobs, job_id)
+    if not job:
+        return make_response(jsonify({'error': 'Job not found'}), 404)
+    db_sess.delete(job)
     db_sess.commit()
     return jsonify({'id': job.id})
