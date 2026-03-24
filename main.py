@@ -82,6 +82,13 @@ def training(prof: str):
     return render_template("training.html", title=title)
 
 
+@app.route('/distribution', methods=["GET"])
+def distribution():
+    db_sess = db_session.create_session()
+    users = db_sess.query(User)
+    return render_template("distribution.html", users=users)
+
+
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
