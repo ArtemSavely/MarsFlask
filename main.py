@@ -76,6 +76,12 @@ def list_prof(list: str):
     return render_template("list_prof.html", list=list, users=users)
 
 
+@app.route('/training/<prof>', methods=["GET"])
+def training(prof: str):
+    title = "Инженерные тренажеры" if "инженер" in prof or "строитель" in prof else "Научные симуляторы"
+    return render_template("training.html", title=title)
+
+
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
