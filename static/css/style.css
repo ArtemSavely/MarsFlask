@@ -6,3 +6,8 @@
 h4 {
     margin: 20px;
 }
+
+.horizontal_container {
+    display: flex;
+    gap: 10px;
+}

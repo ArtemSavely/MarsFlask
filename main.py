@@ -28,9 +28,11 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
+        astronaut = db_sess.query(User).filter(User.id == form.astronaut_id.data).first()
+        captain = db_sess.query(User).filter(User.id == form.captain_id.data).first()
+        if astronaut and astronaut.check_password(form.astronaut_password.data) \
+            and captain and captain.check_password(form.captain_password.data):
+            login_user(astronaut)
             return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",

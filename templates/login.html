@@ -1,28 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Авторизация</h1>
+    <div class="horizontal_container">
+        <img src="../static/images/MARS-2-7.png"/>
+        <h1>Аварийный доступ</h1>
+    </div>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.email.label }}<br>
-            {{ form.email(class="form-control", type="email") }}<br>
-            {% for error in form.email.errors %}
+            {{ form.astronaut_id.label }}<br>
+            {{ form.astronaut_id(class="form-control") }}<br>
+            {% for error in form.astronaut_id.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>
             {% endfor %}
         </p>
         <p>
-            {{ form.password.label }}<br>
-            {{ form.password(class="form-control", type="password") }}<br>
-            {% for error in form.password.errors %}
+            {{ form.astronaut_password.label }}<br>
+            {{ form.astronaut_password(class="form-control", type="password") }}<br>
+            {% for error in form.astronaut_password.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>
             {% endfor %}
         </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>
+            {{ form.captain_id.label }}<br>
+            {{ form.captain_id(class="form-control") }}<br>
+            {% for error in form.captain_id.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.captain_password.label }}<br>
+            {{ form.captain_password(class="form-control", type="password") }}<br>
+            {% for error in form.captain_password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
         <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
         <div>{{ message }}</div>
     </form>
